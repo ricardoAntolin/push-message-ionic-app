@@ -1,7 +1,7 @@
 'use strict';
 angular.module('app.home')
     .controller('homeCtrl', function($scope, homeService, dataFactory, $rootScope) {
-
+        dataFactory.data.badge = 0;
         $scope.model = {};
 
         $scope.deleteMsg = function(deviceMessage) {

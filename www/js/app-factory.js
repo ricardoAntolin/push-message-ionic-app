@@ -3,7 +3,8 @@ angular.module('app.dataFactory', [])
     .factory('dataFactory', function($http) {
         var urlBase = 'http://192.168.0.102:3000/api';
         this.data = {
-            deviceToken: ''
+            deviceToken: '',
+            badge: 0
         };
 
         this.getUrl = function(urlSuffix) {

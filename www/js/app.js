@@ -1,7 +1,7 @@
 'use strict';
 angular.module('app', ['ionic',
         'ngCordova.plugins.push_v5',
-        'app.home', 'app.dataFactory','app.message'
+        'app.home', 'app.dataFactory', 'app.message'
     ])
     .run(function($ionicPlatform, $rootScope, $cordovaPushV5, dataFactory) {
         $ionicPlatform.ready(function() {
@@ -55,18 +55,21 @@ angular.module('app', ['ionic',
             if (data.additionalData.foreground) {
                 // do something if the app is in foreground while receiving to push - handle in app push handling
                 $rootScope.$broadcast('deviceTokenId', dataFactory.data.deviceToken);
+
+
+
             } else {
                 // handle push messages while app is in background or not started
-            }
-            if (ionic.$ionicPlatform.isIOS()) {
-                if (data.additionalData.badge) {
-                    $cordovaPushV5.setBadgeNumber(NewNumber).then(function(result) {
+                if (ionic.$ionicPlatform.isIOS()) {
+                    dataFactory.data.badge++;
+                    $cordovaPushV5.setBadgeNumber(dataFactory.data.badge).then(function(result) {
                         // OK
                     }, function(err) {
                         // handle error
                     });
                 }
             }
+
 
             $cordovaPushV5.finish().then(function(result) {
                 // OK finished - works only with the dev-next version of pushV5.js in ngCordova as of February 8, 2016
