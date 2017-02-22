@@ -26,7 +26,7 @@ angular.module('app', ['ionic',
                     ios: {
                         alert: 'true',
                         badge: true,
-                        sound: 'false',
+                        sound: 'true',
                         clearBadge: true
                     },
                     windows: {}
@@ -34,33 +34,39 @@ angular.module('app', ['ionic',
             ).then(function(result) {
                 $cordovaPushV5.onNotification();
                 $cordovaPushV5.onError();
+
                 $cordovaPushV5.register().then(function(resultreg) {
                     dataFactory.data.deviceToken = resultreg;
-                    $rootScope.$broadcast('deviceTokenId', resultreg);
-                    dataFactory.enrollDevice(resultreg).then((result) => {
-                        // handle enroll result
-                    }, (err) => {
-                        //hadle error
-                    });
+                    _initAppOperations();
                 }, function(err) {
                     // handle error
                 });
+
             });
         });
-
+        $ionicPlatform.on('resume', function() {
+            _initAppOperations();
+        });
         /*
          * Push notification events
          */
+         function _initAppOperations(){
+            if (dataFactory.data.deviceToken) {
+                dataFactory.enrollDevice(dataFactory.data.deviceToken).then((result, err) => {});
+                $rootScope.$broadcast('deviceTokenId', dataFactory.data.deviceToken);
+            }
+         }
+
         $rootScope.$on('$cordovaPushV5:notificationReceived', function(event, data) { // use two variables here, event and data !!!
             if (data.additionalData.foreground) {
                 // do something if the app is in foreground while receiving to push - handle in app push handling
-                $rootScope.$broadcast('deviceTokenId', dataFactory.data.deviceToken);
-
-
+                if (dataFactory.data.deviceToken) {
+                    _initAppOperations();
+                }
 
             } else {
                 // handle push messages while app is in background or not started
-                if (ionic.$ionicPlatform.isIOS()) {
+                if (ionic.Platform.isIOS()) {
                     dataFactory.data.badge++;
                     $cordovaPushV5.setBadgeNumber(dataFactory.data.badge).then(function(result) {
                         // OK

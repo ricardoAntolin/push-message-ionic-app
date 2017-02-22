@@ -19,7 +19,7 @@ angular.module('app.dataFactory', [])
                 url: enrollDeviceUrl,
                 method: "POST",
                 headers : {'Content-Type': 'application/x-www-form-urlencoded'},
-                data: {
+                params: {
                     deviceTokenId: deviceToken,
                     deviceType: platformDevice
                 }
